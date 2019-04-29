@@ -57,7 +57,7 @@ TODO
 
 - [ ] Route Grouping like [gin](https://github.com/gin-gonic/gin)
 - [ ] Request middleware to solve problems such as user authentication etc.
-- [ ] Integration request arguments definition and verification function.
+- [ ] Integration request arguments schema function.
 
 
 License
