@@ -14,7 +14,7 @@ Overview
 Installation
 ------------
 
-`raco pkg install https://github.com/nuty/vela.git`
+`raco pkg install vela`
 
 Quick code 
 -----------
