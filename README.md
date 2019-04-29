@@ -6,7 +6,7 @@ Simple web framework to build restful app in Racket.
 Overview
 ------------
 - Write handlers use CBV (class based views).
-- Friendly define url routers.
+- Friendly way to define url routers.
 - Json response maker.
 - Entirely on the racket webserver lib.
 
