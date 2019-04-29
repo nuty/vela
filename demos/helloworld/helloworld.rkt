@@ -6,7 +6,7 @@
   (class handler%
 
     (define/public (get [id null])
-      (displayln id)
+      (define request-context (get-field request this))
       (jsonify (hash 'code 200 'msg "handle get" )))
 
     (define/public (post)

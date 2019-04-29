@@ -53,7 +53,10 @@
 (define handler%
   (class object%
     (super-new)
-    (init-field request)))
+    (init-field request)
+    
+    (define/public (request-context)
+      (get-field request this))))
  
 (define (path->keys path)
   (map (λ (match) (string->symbol (substring match 2)))
