@@ -47,7 +47,7 @@ Quick code
 
 Demos
 ----------
-A cups of very simple apps build with vela in the [demos folder](https://github.com/nuty/vela/tree/master/demos).
+Very simple apps build with Vela in the [demos folder](https://github.com/nuty/vela/tree/master/demos).
 
 
 TODO
