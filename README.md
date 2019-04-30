@@ -36,8 +36,13 @@ Quick code
     (super-new)))
 
 
+(define fun-handler
+  (lambda (req [id null])
+    (jsonify (hash 'code 200 'msg id ))))
+
 (define routers
   (urls
+    (url "/fun" fun-handler "handler with function")
     (url "/hellos" hello-handler "hello-list/post")
     (url "/hello/:id" hello-handler "hello-put/delete/get")))
 
