@@ -100,7 +100,6 @@
         (handler->method req (hash-ref routers key) key))]))
 
 (define (handler->method req handler-hash key)
-  (displayln (rest (regexp-match key (url->string (request-uri req)))))
   (cond
     [(eq? #"OPTIONS" (request-method req)) (options-response req)]
     [else

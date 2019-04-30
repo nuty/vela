@@ -5,7 +5,7 @@ Simple web framework to build restful app in Racket.
 
 Overview
 ------------
-- Write handlers use (or (Function Based Handler) (Class Based Handler)).
+- Write handlers use Function Based Handler or Class Based Handler.
 - Friendly way to define url routers.
 - Json response maker.
 - Entirely on the racket webserver lib.
