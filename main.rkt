@@ -1,5 +1,4 @@
 #lang racket
-
 (require 
   json
   web-server/servlet
@@ -7,11 +6,12 @@
   web-server/http/bindings
   web-server/http/request-structs)
 
-(define default-headers (list
-      (make-header #"Access-Control-Allow-Origin" #"*")
-      (make-header #"Access-Control-Allow-Credentials" #"true")
-      (make-header #"Access-Control-Allow-Headers" #"*")
-      (make-header #"Access-Control-Allow-Headers" #"Authorization, Access-Control-Allow-Headers, X-Mx-ReqToken, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers")))
+(define default-headers 
+  (list
+    (make-header #"Access-Control-Allow-Origin" #"*")
+    (make-header #"Access-Control-Allow-Credentials" #"true")
+    (make-header #"Access-Control-Allow-Headers" #"*")
+    (make-header #"Access-Control-Allow-Methods" #"PUT, POST, GET, DELETE, PATCH, OPTIONS")))
 
 (define (response
   #:code    [code/kw 200]
@@ -20,6 +20,7 @@
   #:mime    [mime/kw #f]
   #:headers [headers/kw empty]
   #:body    [body/kw empty])
+
   (define mime
     (cond [(string? mime/kw) (string->bytes/utf-8 mime/kw)]
           [(bytes? mime/kw) mime/kw]
@@ -41,14 +42,26 @@
     headers/kw
     body))
 
-(define (jsonify args)
-  (define json-rv 
-    (with-output-to-string
-        (λ () (write-json args))))
+(define (render ret)
   (response
-    #:headers default-headers
-    #:mime #"application/json"
-    #:body json-rv))
+    #:code 200
+    #:message "OK"
+    #:seconds (current-seconds)
+    #:mime TEXT/HTML-MIME-TYPE
+    #:headers empty
+    #:body ret))
+
+(define (jsonify args)
+  (let
+    ([json-ret (with-output-to-string (λ () (write-json args)))])
+    (response
+      #:headers default-headers
+      #:mime #"application/json"
+      #:body json-ret)))
+
+(define (options-response req)
+  (response
+    #:headers default-headers))
 
 (define handler%
   (class object%
@@ -87,16 +100,23 @@
         (handler->method req (hash-ref routers key) key))]))
 
 (define (handler->method req handler-hash key)
-  (let* 
-    ([handler (hash-ref handler-hash 'handler)]
-     [args (rest (regexp-match key (url->string (request-uri req))))]
-     [handler-object (make-object handler req)])
-    (case (request-method req)
-      [(#"GET") (send/apply handler-object get args)]
-      [(#"POST") (send/apply handler-object post args)]
-      [(#"PUT") (send/apply handler-object put args)]
-      [(#"PATCH") (send/apply handler-object patch args)]
-      [(#"DELETE") (send/apply handler-object delete args)])))
+  (displayln (rest (regexp-match key (url->string (request-uri req)))))
+  (cond
+    [(eq? #"OPTIONS" (request-method req)) (options-response req)]
+    [else
+      (let
+        ([handler (hash-ref handler-hash 'handler)]
+        [args (rest (regexp-match key (url->string (request-uri req))))])
+        (cond 
+          [(procedure? handler) (if (empty? args) (handler req) (handler req args))]
+          [else
+            (let ([handler-object (make-object handler req)])
+              (case (request-method req)
+                [(#"GET") (send/apply handler-object get args)]
+                [(#"POST") (send/apply handler-object post args)]
+                [(#"PUT") (send/apply handler-object put args)]
+                [(#"PATCH") (send/apply handler-object patch args)]
+                [(#"DELETE") (send/apply handler-object delete args)]))]))]))
 
 (define (dispatcher req routers)
   (let
@@ -142,4 +162,5 @@
   url
   app-run
   not-found
+  render
   jsonify)
