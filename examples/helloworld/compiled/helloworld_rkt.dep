@@ -1,0 +1,1 @@
+("7.2" racket ("e2ad3f6fbd78bb73086e71cfea5e75e728887504" . "83680bdc0e1842cde983303291ff07067020e5cf") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vela" #"main.rkt") (collects #"web-server" #"templates.rkt") (ext collects #"vela" #"demos" #"helloworld" #"index.html"))

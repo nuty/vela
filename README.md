@@ -3,7 +3,7 @@ Vela
 
 Simple web framework to build restful app in Racket. 
 
-Overview
+Features
 ------------
 - Write handlers use Function Based Handler or Class Based Handler.
 - Friendly way to define url routers.
@@ -65,7 +65,7 @@ TODO
 
 - [ ] Route Grouping like [gin](https://github.com/gin-gonic/gin)
 - [ ] Request middleware to solve problems such as user authentication etc.
-- [ ] Integration request arguments schema function.
+- [ ] Integration request arguments schema features.
 
 
 License
