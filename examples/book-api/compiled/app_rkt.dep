@@ -1,1 +1,0 @@
-("7.2" racket ("43496cdc5a58eb338ca781318e85aec298d09b33" . "12329fc4733f68724cf60c3c7e2e13223a725d20") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vela" #"demos" #"book-api" #"handlers.rkt") (collects #"vela" #"main.rkt"))
