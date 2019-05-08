@@ -76,7 +76,7 @@
       "doc" #"application/msword; charset=utf-8"
       "docx" #"application/msword; charset=utf-8"
       "xls" #"application/excel; charset=utf-8"
-      "pdf" #"image/gif; charset=utf-8"
+      "pdf" #"image/pdf; charset=utf-8"
       "xml" #"application/xml; charset=utf-8"
       "json" #"application/json; charset=utf-8"))
 
