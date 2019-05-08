@@ -79,7 +79,6 @@
       "docx" #"application/msword; charset=utf-8"
       "xls" #"application/excel; charset=utf-8"
       "pdf" #"image/pdf; charset=utf-8"
-    
       "mp4" #"video/mpeg4; charset=utf-8"
       "mp3" #"audio/mp3; charset=utf-8"
     )
