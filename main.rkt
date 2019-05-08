@@ -4,7 +4,9 @@
   web-server/servlet
   web-server/servlet-env
   web-server/http/bindings
+  web-server/private/mime-types
   web-server/http/request-structs)
+
 
 (define default-headers 
   (list
@@ -12,6 +14,7 @@
     (make-header #"Access-Control-Allow-Credentials" #"true")
     (make-header #"Access-Control-Allow-Headers" #"*")
     (make-header #"Access-Control-Allow-Methods" #"PUT, POST, GET, DELETE, PATCH, OPTIONS")))
+
 
 (define (response
   #:code    [code/kw 200]
@@ -42,6 +45,7 @@
     headers/kw
     body))
 
+
 (define (render ret)
   (response
     #:code 200
@@ -51,6 +55,7 @@
     #:headers empty
     #:body ret))
 
+
 (define (jsonify args)
   (let
     ([json-ret (with-output-to-string (λ () (write-json args)))])
@@ -59,9 +64,33 @@
       #:mime #"application/json"
       #:body json-ret)))
 
+
+(define MIME-TYPE-HASH
+    (hash
+      "jpg" #"image/jpg; charset=utf-8"
+      "jpeg" #"image/jpeg; charset=utf-8"
+      "png" #"image/png; charset=utf-8"
+      "gif" #"image/gif; charset=utf-8"
+      "js" #"application/x-javascript; charset=utf-8"
+      "css" #"text/css; charset=utf-8"
+      "doc" #"application/msword; charset=utf-8"
+      "docx" #"application/msword; charset=utf-8"
+      "xls" #"application/excel; charset=utf-8"
+      "pdf" #"image/gif; charset=utf-8"
+      "xml" #"application/xml; charset=utf-8"
+      "json" #"application/json; charset=utf-8"))
+
+(define (not-found req)
+  (response 
+    #:code 404
+    #:body "404 not found!"
+    #:message "Not Found"))
+
+
 (define (options-response req)
   (response
     #:headers default-headers))
+
 
 (define handler%
   (class object%
@@ -70,10 +99,12 @@
     
     (define/public (request-context)
       (get-field request this))))
- 
+
+
 (define (path->keys path)
   (map (λ (match) (string->symbol (substring match 2)))
     (regexp-match* #rx"/:([^\\/]+)" path)))
+
 
 (define (path->regx path)
   (string-append
@@ -81,23 +112,40 @@
     (regexp-replace* #rx":[^\\/]+" path "([^/?]+)")
     "(?:$|\\?)"))
 
-(define (request->route-key req routers)
-  (filter (λ (key)
-          (not (boolean? (regexp-match key (url->string (request-uri req))))))
-        (hash-keys routers)))
 
-(define (not-found req)
-  (response 
-    #:code 200
-    #:body "404 not found!"
-    #:message "Not Found"))
+(define (request->route-key req routers static-path static-url)
+  (let* 
+    ([req-full-path (url->string (request-uri req))]
+     [url-prefix (if (empty? (string-split req-full-path "/"))
+                    "/" 
+                  (first (string-split req-full-path "/")))])
+    (cond 
+      [(equal? url-prefix static-url) (list url-prefix req-full-path )]
+      [else
+        (filter (λ (key)
+            (not (boolean? (regexp-match key req-full-path))))
+              (hash-keys routers))])))
 
-(define (route->handler req routers keys)
+
+(define (static-file-handler req static-path static-url)
+  (let* 
+    ([req-full-path (url->string (request-uri req))]
+     [file-path (rest (string-split req-full-path static-url))]
+     [file-type (last (string-split req-full-path "."))]
+     [full-file-path (build-path static-path (substring (car file-path) 1))])
+      (response/file full-file-path file-type)))
+
+
+(define (route->handler req routers keys static-path static-url)
   (cond
     [(null? keys) (not-found req)]
     [else
       (let ([key (car keys)])
-        (handler->method req (hash-ref routers key) key))]))
+        (cond 
+          [(equal? key static-url) (static-file-handler req static-path static-url)] ;is static file url not handler url
+          [else 
+            (handler->method req (hash-ref routers key) key)]))]))
+
 
 (define (handler->method req handler-hash key)
   (cond
@@ -117,10 +165,23 @@
                 [(#"PATCH") (send/apply handler-object patch args)]
                 [(#"DELETE") (send/apply handler-object delete args)]))]))]))
 
-(define (dispatcher req routers)
+
+(define (dispatcher req routers static-path static-url)
   (let
-    ([keys (request->route-key req routers)])
-    (route->handler req routers keys)))
+    ([keys (request->route-key req routers static-path static-url)])
+      (route->handler req routers keys static-path static-url)))
+
+
+(define (response/file file file-type)
+  (let 
+    ([file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
+    (response/output 
+      (λ (op) 
+        (let ([ip (open-input-file file)])
+                (copy-port ip op)
+              (close-input-port ip))) 
+      #:mime-type file-mime)
+  ))
 
 (define (urls . us)
   (define urls-hash (make-hash))
@@ -143,16 +204,19 @@
 (define (url path handler endpoint)
   (list path handler endpoint))
 
+
 (define (app-run routers
   #:port    [host/port 8000]
-  #:config   [app/config #f])
+  #:static-path  [static-path #f]
+  #:static-url  [static-url #f]
+)
+
   (serve/servlet
     (λ (req)
-        (dispatcher req routers))
+        (dispatcher req routers static-path static-url))
     #:launch-browser? #f
     #:servlet-path "/"
     #:port host/port
-    #:listen-ip #f
     #:servlet-regexp #rx""))
 
 (provide
