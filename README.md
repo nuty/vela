@@ -52,8 +52,8 @@ Quick code
 (app-run 
   routers 
   #:port 8000
-  #:static-path (build-path (current-directory) "your static files dir")
-  #:static-url "static")
+  #:static-path (build-path (current-directory) "static") ;your static files dir
+  #:static-url "static") ;your static files dir
 
 
 ```
