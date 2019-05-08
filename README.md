@@ -49,7 +49,12 @@ Quick code
     (url "/hello/:id" hello-handler "hello-put/delete/get")))
 
 
-(app-run routers #:port 8000)
+(app-run 
+  routers 
+  #:port 8000
+  #:static-path (build-path (current-directory) "your static files dir")
+  #:static-url "static")
+
 
 ```
 
