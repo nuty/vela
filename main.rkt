@@ -133,11 +133,11 @@
      [file-path (rest (string-split req-full-path static-url))]
      [file-type (last (string-split req-full-path "."))]
      [full-file-path (build-path static-path (substring (car file-path) 1))])
-
       (cond 
-        [(file-exists? full-file-path) (response/file full-file-path file-type)]
-        [else (not-found req)]
-        )))
+        [(file-exists? full-file-path)
+          (response/file full-file-path file-type)]
+        [else 
+          (not-found req)])))
 
 
 (define (route->handler req routers keys static-path static-url)
