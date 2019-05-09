@@ -188,8 +188,7 @@
         (let ([ip (open-input-file file)])
                 (copy-port ip op)
               (close-input-port ip))) 
-      #:mime-type file-mime)
-  ))
+      #:mime-type file-mime)))
 
 (define (urls . us)
   (define urls-hash (make-hash))
@@ -216,8 +215,7 @@
 (define (app-run routers
   #:port    [host/port 8000]
   #:static-path  [static-path #f]
-  #:static-url  [static-url #f]
-)
+  #:static-url  [static-url #f])
 
   (serve/servlet
     (λ (req)
