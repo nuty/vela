@@ -1,5 +1,5 @@
 #lang racket
-(require 
+(require
   json
   web-server/servlet
   web-server/servlet-env
@@ -7,8 +7,9 @@
   web-server/private/mime-types
   web-server/http/request-structs)
 
+(define urls-hash (make-hash))
 
-(define default-headers 
+(define default-headers
   (list
     (make-header #"Access-Control-Allow-Origin" #"*")
     (make-header #"Access-Control-Allow-Credentials" #"true")
@@ -37,6 +38,7 @@
           [(bytes? body/kw) (list body/kw)]
           [(list? body/kw) body/kw]
           (#t body/kw)))
+
   (response/full
     code/kw
     message
@@ -80,27 +82,24 @@
       "xls" #"application/excel; charset=utf-8"
       "pdf" #"image/pdf; charset=utf-8"
       "mp4" #"video/mpeg4; charset=utf-8"
-      "mp3" #"audio/mp3; charset=utf-8"
-    )
-)
+      "mp3" #"audio/mp3; charset=utf-8"))
 
 (define (not-found req)
-  (response 
+  (response
     #:code 404
     #:body "404 not found!"
     #:message "Not Found"))
 
 
 (define (options-response req)
-  (response
-    #:headers default-headers))
+  (response #:headers default-headers))
 
 
 (define handler%
   (class object%
     (super-new)
     (init-field request)
-    
+
     (define/public (request-context)
       (get-field request this))))
 
@@ -118,13 +117,13 @@
 
 
 (define (request->route-key req routers static-path static-url)
-  (let* 
+  (let*
     ([req-full-path (url->string (request-uri req))]
      [url-prefix (if (empty? (string-split req-full-path "/"))
-                    "/" 
+                    "/"
                   (first (string-split req-full-path "/")))])
-    (cond 
-      [(equal? url-prefix static-url) (list url-prefix req-full-path )]
+    (cond
+      [(equal? url-prefix static-url) (list url-prefix req-full-path)]
       [else
         (filter (λ (key)
             (not (boolean? (regexp-match key req-full-path))))
@@ -132,15 +131,15 @@
 
 
 (define (static-file-handler req static-path static-url)
-  (let* 
+  (let*
     ([req-full-path (url->string (request-uri req))]
      [file-path (rest (string-split req-full-path static-url))]
      [file-type (last (string-split req-full-path "."))]
      [full-file-path (build-path static-path (substring (car file-path) 1))])
-      (cond 
+      (cond
         [(file-exists? full-file-path)
           (response/file full-file-path file-type)]
-        [else 
+        [else
           (not-found req)])))
 
 
@@ -149,9 +148,9 @@
     [(null? keys) (not-found req)]
     [else
       (let ([key (car keys)])
-        (cond 
+        (cond
           [(equal? key static-url) (static-file-handler req static-path static-url)] ;is static file url not handler url
-          [else 
+          [else
             (handler->method req (hash-ref routers key) key)]))]))
 
 
@@ -161,8 +160,8 @@
     [else
       (let
         ([handler (hash-ref handler-hash 'handler)]
-        [args (rest (regexp-match key (url->string (request-uri req))))])
-        (cond 
+          [args (rest (regexp-match key (url->string (request-uri req))))])
+        (cond
           [(procedure? handler) (if (empty? args) (handler req) (handler req args))]
           [else
             (let ([handler-object (make-object handler req)])
@@ -181,32 +180,50 @@
 
 
 (define (response/file file file-type)
-  (let 
+  (let
     ([file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
-    (response/output 
-      (λ (op) 
+    (response/output
+      (λ (op)
         (let ([ip (open-input-file file)])
                 (copy-port ip op)
-              (close-input-port ip))) 
-      #:mime-type file-mime)))
+              (close-input-port ip))) #:mime-type file-mime)))
 
 (define (urls . us)
-  (define urls-hash (make-hash))
   (for ([u us])
-    (let* 
-      ([path (car u)]
-       [prefix (path->regx path)]
-       [handler (second u)]
-       [args (path->keys path)]
-       [endpoint (last u)])
-      (cond
-        [(hash-has-key? urls-hash prefix) (error "Duplicate url key found.")]
-        [else 
-          (hash-set! urls-hash prefix
-            (hash
-              'handler handler 
-              'args args
-              'endpoint endpoint))]))) urls-hash)
+    (cond 
+      [(string? (first u)) (make-url-hash u urls-hash)]
+      [else 
+        (for ([deep-u u]) 
+          (make-url-hash deep-u urls-hash))]))
+  urls-hash)
+
+
+(define (make-url-hash u urls-hash)
+  (let* 
+    ([path (car u)]
+      [prefix (path->regx path)]
+      [handler (second u)]
+      [args (path->keys path)]
+      [endpoint (last u)])
+    (cond
+      [(hash-has-key? urls-hash prefix) (error "Duplicate url key found.")]
+      [else 
+        (hash-set! urls-hash prefix
+          (hash
+            'handler handler 
+            'args args
+            'endpoint endpoint))])))
+
+
+(define (url-group prefix)
+  (define (group . us)
+    (map 
+      (lambda (e) 
+        (url
+          (string-append prefix (first e))
+          (second e)
+          (last e))) us)) group)
+
 
 (define (url path handler endpoint)
   (list path handler endpoint))
@@ -219,7 +236,7 @@
 
   (serve/servlet
     (λ (req)
-        (dispatcher req routers static-path static-url))
+      (dispatcher req routers static-path static-url))
     #:launch-browser? #f
     #:servlet-path "/"
     #:port host/port
@@ -231,5 +248,6 @@
   url
   app-run
   not-found
+  url-group
   render
   jsonify)
