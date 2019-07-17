@@ -71,7 +71,7 @@ TODO
 
 ### v0.2
 
-- [ 😃 ] Route Grouping like [gin](https://github.com/gin-gonic/gin)
+- 😃 Route Grouping like [gin](https://github.com/gin-gonic/gin)
 - [ ] Request middleware to solve problems such as user authentication etc.
 - [ ] Integration request arguments schema features.
 
