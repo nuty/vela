@@ -1,7 +1,6 @@
 #lang racket
 (require
-  ; vela
-  "../../main.rkt"
+  vela
   "handlers.rkt")
 
 
