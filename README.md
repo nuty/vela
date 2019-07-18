@@ -46,7 +46,9 @@ Quick code
 
 (define routers
   (urls
+
     (url "/" fun-handler "handler with function")
+    (url "/another" fun-handler "handler with function")
 
     (api-v1
       (url "/hellos" hello-handler "hello-list/post")
