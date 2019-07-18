@@ -42,11 +42,12 @@ Quick code
     (jsonify (hash 'code 200 'msg id ))))
 
 
-(define api-v1 (url-group "/api/v1"))
+(define api-v1 (url-group "/api/v1")) ;define a url group
 
 (define routers
   (urls
     (url "/" fun-handler "handler with function")
+
     (api-v1
       (url "/hellos" hello-handler "hello-list/post")
       (url "/hello/:id" hello-handler "hello-put/delete/get"))))
