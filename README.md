@@ -43,7 +43,7 @@ Quick code
     (super-new)))
 
 
-(define fun-handler
+(define index-handler
   (lambda (req [id null])
     (jsonify (hash 'code 200 'msg id ))))
 
@@ -53,8 +53,7 @@ Quick code
 (define routers
   (urls
 
-    (url "/" fun-handler "handler with function")
-    (url "/another" fun-handler "handler with function")
+    (url "/" index-handler "handler with function")
 
     (api-v1
       (url "/hellos" hello-handler "hello-list/post")
@@ -70,7 +69,7 @@ Quick code
 ```
 
 
-Demos
+examples
 ----------
 Very simple apps build with Vela in the [demos folder](https://github.com/nuty/vela/tree/master/demos).
 
