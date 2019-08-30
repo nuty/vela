@@ -33,6 +33,12 @@ Quick code
 
     (define/public (post)
       (jsonify (hash 'code 200 'msg "handle post" )))
+    
+    (define/public (put id)
+      (jsonify (hash 'code 200 'msg "handle put" )))
+    
+    (define/public (delete id)
+      (jsonify (hash 'code 200 'msg "handle delete" )))
 
     (super-new)))
 
@@ -67,16 +73,6 @@ Quick code
 Demos
 ----------
 Very simple apps build with Vela in the [demos folder](https://github.com/nuty/vela/tree/master/demos).
-
-
-TODO
-----
-
-### v0.2
-
-- 😃 Route Grouping like [gin](https://github.com/gin-gonic/gin)
-- [ ] Request middleware to solve problems such as user authentication etc.
-- [ ] Integration request arguments schema features.
 
 
 License
