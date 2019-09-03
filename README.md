@@ -44,8 +44,8 @@ Quick code
 
 
 (define index-handler
-  (lambda (req [id null])
-    (jsonify (hash 'code 200 'msg id ))))
+  (lambda (req)
+    (jsonify (hash 'code 200 'msg "hello api" ))))
 
 
 (define api-v1 (url-group "/api/v1")) ;define a url group
