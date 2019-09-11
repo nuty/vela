@@ -232,7 +232,8 @@
 (define (app-run routers
   #:port    [host/port 8000]
   #:static-path  [static-path #f]
-  #:static-url  [static-url #f])
+  #:static-url  [static-url #f]
+  #:log-file [log-file #f])
 
   (serve/servlet
     (λ (req)
@@ -240,6 +241,7 @@
     #:launch-browser? #f
     #:servlet-path "/"
     #:port host/port
+    #:log-file log-file
     #:servlet-regexp #rx""))
 
 (provide

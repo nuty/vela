@@ -33,10 +33,10 @@ Quick code
 
     (define/public (post)
       (jsonify (hash 'code 200 'msg "handle post" )))
-    
+
     (define/public (put id)
       (jsonify (hash 'code 200 'msg "handle put" )))
-    
+
     (define/public (delete id)
       (jsonify (hash 'code 200 'msg "handle delete" )))
 
@@ -63,6 +63,7 @@ Quick code
 (app-run
   routers
   #:port 8000
+  #:log-file "access.log" ;your log file
   #:static-path (build-path (current-directory) "static") ;your static files dir
   #:static-url "static") ;your static url suffix
 
