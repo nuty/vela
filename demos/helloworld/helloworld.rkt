@@ -18,7 +18,7 @@
   (class handler%
 
     (define/public (get [id null])
-      (define request-context (get-field request this))
+      (define ctx (get-field request this))
       (jsonify (hash 'code 200 'msg "handle get" )))
 
     (define/public (post)

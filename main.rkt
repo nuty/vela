@@ -100,7 +100,7 @@
     (super-new)
     (init-field request)
 
-    (define/public (request-context)
+    (define/public (ctx)
       (get-field request this))))
 
 
