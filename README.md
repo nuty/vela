@@ -74,7 +74,7 @@ Response
 Use ```jsonify ``` to return JSON content.
 
 ```racket
-(jsonify (hash 'name rosso 'msg "hello world!"))
+(jsonify (hash 'name "rosso" 'msg "hello world!"))
 ```
 
 Use ```render ``` to render TEXT or HTML template.
