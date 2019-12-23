@@ -79,7 +79,7 @@ Use ```jsonify ``` to return JSON content.
 
 Use ```render ``` to render TEXT or HTML template.
 
-TEXT
+plain text
 
 ```racket
 (render "hello world!")
