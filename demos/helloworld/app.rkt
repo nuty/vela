@@ -1,7 +1,7 @@
 #lang racket
 (require
   web-server/templates
-  vela)
+  "../../vela-lib/vela/main.rkt")
 
 (define (index req)
   (let ([name "Rosso"])
@@ -17,7 +17,9 @@
 (define hello-handler%
   (class handler%
 
-    (define/public (get [id null])
+    (define/public (get [id1 null] [id2 null])
+      (displayln id1)
+      (displayln id2)
       (define ctx (get-field request this))
       (jsonify (hash 'code 200 'msg "handle get" )))
 
@@ -37,7 +39,7 @@
   (urls
     (url "/" index "index-page")
     (url "/hello" hello-handler% "hello-list/post")
-    (url "/hello/:id" hello-handler% "hello-put/delete/get-one")
+    (url "/hello/:id1/sdsd/:id2" hello-handler% "hello-put/delete/get-one")
     (url "/fun" fun "fun")
     (url "/fun/:id" fun "fun-with-id")
     (url "/fun2/:id" fun2 "fun2-with-id")))
