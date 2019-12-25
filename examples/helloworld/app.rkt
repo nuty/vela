@@ -1,8 +1,9 @@
 #lang racket
 (require
-  web-server/templates
+  json
   racket/struct
   web-server/http/request-structs
+
   "../../vela-lib/vela/main.rkt")
 
 
@@ -19,18 +20,19 @@
 
 (define hello-handler%
   (class handler%
+    
+    (define/public (get id)
+      (define req (get-field request this))
+      (define args (hello-argumets req))
+      (jsonify (hash 'code 200 'msg "handle put" )))
+
+
     (define/public (post id)
-      (define ctx (get-field request this))
-      (define args (hello-argumets ctx))
-      ; (displayln ctx)
-      (displayln "**************************************")
-      (displayln (request-bindings/raw ctx))
-      ; (displayln (request-post-data/raw ctx))
-      (displayln "**************************************")
+      (define req (get-field request this))
+      (define args (hello-argumets req))
       (jsonify (hash 'code 200 'msg "handle post" )))
 
-    (define/public (put id)
-      (jsonify (hash 'code 200 'msg "handle put" )))
+
 
     (super-new)))
 

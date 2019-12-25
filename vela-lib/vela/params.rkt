@@ -1,15 +1,20 @@
 #lang racket
+(require
+  racket/struct
+  net/url
+  web-server/http/bindings
+  web-server/http/request-structs)
 
 
 (define (argument
-        name
-        #:type        type
-        #:location    [location 'args]
-        #:default     [default '()]
-        #:require     [require #f]
-        #:help        [help ""]
-        #:filter      [filter (void)])
-(list name type location default require help filter))
+    name
+    #:type        type
+    #:location    [location 'args]
+    #:default     [default '()]
+    #:require     [require #f]
+    #:help        [help ""]
+    #:filter      [filter (void)])
+  (list name type location default require help filter))
 
 
 (define (make-arguments-hash fields)
@@ -51,8 +56,18 @@
   (define (parse-args req)
     (define result-hash (make-hash))
     (for ([key (hash-keys arguments-hash)])
-      (void))
-      result-hash)
+    ;   (displayln req)
+        (define queries  (url-query (request-uri req)))
+        (define post-data (request-post-data/raw req))
+        (define binds-data (request-bindings req))
+        (displayln queries)
+        (displayln post-data)
+        (displayln binds-data)
+        
+      (void)
+      )
+    
+    result-hash)
   parse-args)
 
 
