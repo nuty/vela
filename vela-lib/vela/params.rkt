@@ -51,21 +51,12 @@
   (define (parse-args req)
     (define result-hash (make-hash))
     (for ([key (hash-keys arguments-hash)])
-      (displayln (hash-ref arguments-hash key)))
+      (void))
       result-hash)
   parse-args)
 
 
-(define my-argumets
-  (arguments
-    (argument "name" #:type 'str #:location 'json #:default "rosso")
-    (argument "age" #:type 'int #:location 'json)
-    (argument "address" #:type 'str #:location 'json #:filter (lambda (x) (string-append "china" x)))
-    (argument "page" #:type 'int #:location 'args)
-    (argument "house" #:type 'str #:location 'form)))
 
-
-(displayln (my-argumets "as"))
 
 (provide 
   argument

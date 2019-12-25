@@ -3,7 +3,6 @@
   web-server/http/request-structs)
 
 (define urls-hash (make-hash))
-(define argument-hash (make-hash))
 
 (define default-headers
   (list
@@ -32,5 +31,4 @@
 (provide
   default-headers
   urls-hash
-  params-hash
   MIME-TYPE-HASH)

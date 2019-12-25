@@ -4,6 +4,7 @@
   "dispatcher.rkt"
   "context.rkt"
   "app.rkt"
+  "params.rkt"
   "routes.rkt")
 
 
@@ -11,4 +12,5 @@
   (all-from-out
     "context.rkt"
     "app.rkt"
+    "params.rkt"
     "routes.rkt"))
