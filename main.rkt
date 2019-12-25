@@ -48,21 +48,27 @@
     body))
 
 
-(define (render ret)
+(define (render
+    ret
+    #:code    [code 200]
+    #:message [message "OK"]
+    #:seconds [seconds (current-seconds)]
+    #:mime    [mime TEXT/HTML-MIME-TYPE]
+    #:headers [headers empty])
   (response
-    #:code 200
-    #:message "OK"
-    #:seconds (current-seconds)
-    #:mime TEXT/HTML-MIME-TYPE
-    #:headers empty
+    #:code code
+    #:message message
+    #:seconds seconds
+    #:mime mime
+    #:headers headers
     #:body ret))
 
 
-(define (jsonify args)
+(define (jsonify args [headers default-headers])
   (let
     ([json-ret (with-output-to-string (λ () (write-json args)))])
     (response
-      #:headers default-headers
+      #:headers headers
       #:mime #"application/json"
       #:body json-ret)))
 
@@ -91,8 +97,8 @@
     #:message "Not Found"))
 
 
-(define (options-response req)
-  (response #:headers default-headers))
+(define (options-response req [headers default-headers])
+  (response #:headers headers))
 
 
 (define handler%
@@ -188,6 +194,7 @@
                 (copy-port ip op)
               (close-input-port ip))) #:mime-type file-mime)))
 
+
 (define (urls . us)
   (for ([u us])
     (cond 
@@ -231,6 +238,7 @@
 
 (define (app-run routers
   #:port    [host/port 8000]
+  #:listen-ip    [listen-ip "127.0.0.1"]
   #:static-path  [static-path #f]
   #:static-url  [static-url #f]
   #:log-file [log-file #f])
@@ -241,8 +249,10 @@
     #:launch-browser? #f
     #:servlet-path "/"
     #:port host/port
+    #:listen-ip listen-ip
     #:log-file log-file
     #:servlet-regexp #rx""))
+
 
 (provide
   handler%
@@ -253,4 +263,5 @@
   url-group
   render
   response
+  response/file
   jsonify)
