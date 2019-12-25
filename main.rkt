@@ -48,13 +48,19 @@
     body))
 
 
-(define (render ret)
+(define (render
+    ret
+    #:code    [code 200]
+    #:message [message "OK"]
+    #:seconds [seconds (current-seconds)]
+    #:mime    [mime TEXT/HTML-MIME-TYPE]
+    #:headers [headers empty])
   (response
-    #:code 200
-    #:message "OK"
-    #:seconds (current-seconds)
-    #:mime TEXT/HTML-MIME-TYPE
-    #:headers empty
+    #:code code
+    #:message message
+    #:seconds seconds
+    #:mime mime
+    #:headers headers
     #:body ret))
 
 
