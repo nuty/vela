@@ -4,7 +4,8 @@
   racket/struct
   net/url
   web-server/http/bindings
-  web-server/http/request-structs)
+  web-server/http/request-structs
+  "context.rkt")
 
 
 (define (argument
@@ -53,42 +54,47 @@
 
 
 (define (parse-req req)
-  
-  (define json-hash (make-hash))
-  (define args-hash (make-hash))
-  (displayln "###################################")
-  (displayln (request-post-data/raw req))
-  (displayln "###################################")
-  (define json-data (bytes->jsexpr (request-post-data/raw req)))
+  (define json-hash (make-hasheq))
+  (define args-hash (make-hasheq))
+  (define maybe-json-data  (request-post-data/raw req))
   (define args-data (request-bindings req))
-  (displayln "###################################")
+  (define content-type 
+    (cdr (car 
+      (filter (λ (header) (eq? (car header) 'content-type)) (request-headers req)))))
 
   (for ([arg args-data])
     (let
       ([key (car arg)]
        [value (cdr arg)])
        (hash-set! args-hash key value)))
-  
-  ; (displayln args-hash)
-  (displayln (request-post-data/raw req))
-  (displayln "###################################")
 
-  )
+  (if (and (not (empty? maybe-json-data))
+           (equal? content-type "application/json"))
+    (set! json-hash  (bytes->jsexpr maybe-json-data))
+  (void))
+  (cons args-hash json-hash))
 
 
 (define (arguments . fields)
   (define arguments-hash (make-arguments-hash fields))
-  (define queries-hash (make-hash))
-  (define data-hash (make-hash))
-
   (define (parse-args req)
+    (define hashs (parse-req req))
+    (define args-hash (car hashs))
+    (define json-hash (cdr hashs))
     (define result-hash (make-hash))
-    (parse-req req)
     (for ([key (hash-keys arguments-hash)])
-  ;   (displayln req)
-      
-      (void))
-    
+      (let* 
+        ([field (hash-ref arguments-hash key)]
+         [name (hash-ref field 'name #f)]
+         [location (hash-ref field 'location #f)]
+         [type (hash-ref field 'type #f)]
+         [require (hash-ref field 'require #f)]
+         [default (hash-ref field 'default #f)]
+         [filter (hash-ref field 'filter (void))])
+
+          (void)  
+        )
+    )
     result-hash)
   parse-args)
 

@@ -14,7 +14,7 @@
     (argument "address" #:type 'str #:location 'json #:filter (lambda (x) (string-append "china" x)))
     (argument "id" #:type 'int #:location 'args)
     (argument "page" #:type 'int #:location 'args)
-    (argument "house" #:type 'str #:location 'args)))
+    (argument "house" #:type 'str #:location 'json)))
 
 
 
