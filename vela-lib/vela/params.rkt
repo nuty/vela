@@ -1,5 +1,6 @@
 #lang racket
 (require
+  json
   racket/struct
   net/url
   web-server/http/bindings
@@ -51,21 +52,42 @@
   argument-hash)
 
 
+(define (parse-req req)
+  
+  (define json-hash (make-hash))
+  (define args-hash (make-hash))
+  (displayln "###################################")
+  (displayln (request-post-data/raw req))
+  (displayln "###################################")
+  (define json-data (bytes->jsexpr (request-post-data/raw req)))
+  (define args-data (request-bindings req))
+  (displayln "###################################")
+
+  (for ([arg args-data])
+    (let
+      ([key (car arg)]
+       [value (cdr arg)])
+       (hash-set! args-hash key value)))
+  
+  ; (displayln args-hash)
+  (displayln (request-post-data/raw req))
+  (displayln "###################################")
+
+  )
+
+
 (define (arguments . fields)
   (define arguments-hash (make-arguments-hash fields))
+  (define queries-hash (make-hash))
+  (define data-hash (make-hash))
+
   (define (parse-args req)
     (define result-hash (make-hash))
+    (parse-req req)
     (for ([key (hash-keys arguments-hash)])
-    ;   (displayln req)
-        (define queries  (url-query (request-uri req)))
-        (define post-data (request-post-data/raw req))
-        (define binds-data (request-bindings req))
-        (displayln queries)
-        (displayln post-data)
-        (displayln binds-data)
-        
-      (void)
-      )
+  ;   (displayln req)
+      
+      (void))
     
     result-hash)
   parse-args)
