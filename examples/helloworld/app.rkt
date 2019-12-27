@@ -9,12 +9,22 @@
 
 (define hello-argumets
   (arguments
-    (argument "name" #:type 'str #:location 'json #:default "rosso")
-    (argument "address" #:type 'str #:location 'json #:filter (lambda (x) (string-append "china" x)))
-    (argument "house" #:type 'str #:location 'json)
-    (argument "age" #:type 'int #:location 'json)
-    (argument "id" #:type 'int #:location 'args)
-    (argument "page" #:type 'int #:location 'args)))
+    (argument "name" #:type 'str #:location 'json)
+    (argument "address" #:type 'hash #:location 'json #:filter (lambda (x) x))
+    (argument "backs" #:type 'list #:location 'json #:filter (lambda (x) x))
+    (argument "age" #:type 'number #:location 'json #:require #t) 
+    (argument "id" #:type 'number #:location 'args #:require #t)
+    (argument "page" #:type 'number #:location 'args)))
+
+
+(define hello-argumets1
+  (arguments
+    (argument "name" #:type 'str #:location 'form)
+    (argument "address" #:type 'str #:location 'form #:filter (lambda (x) x))
+    (argument "backs" #:type 'str #:location 'form #:filter (lambda (x) x))
+    (argument "age" #:type 'number #:location 'form #:require #t) 
+    (argument "id" #:type 'number #:location 'args #:require #t)
+    (argument "page" #:type 'number #:location 'args)))
 
 
 
@@ -24,12 +34,15 @@
     (define/public (get id)
       (define req (get-field request this))
       (define args (hello-argumets req))
-      (jsonify (hash 'code 200 'msg "handle put" )))
+
+      (jsonify (hash 'code 200 'msg "handle get" )))
 
 
     (define/public (post id)
       (define req (get-field request this))
-      (define args (hello-argumets req))
+      ; (define args (hello-argumets req))
+      (define args (hello-argumets1 req))
+      (displayln args)
       (jsonify (hash 'code 200 'msg "handle post" )))
 
 

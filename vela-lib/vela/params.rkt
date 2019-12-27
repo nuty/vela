@@ -8,9 +8,6 @@
   "context.rkt")
 
 
-
-
-
 (define (argument
     name
     #:type        type
@@ -40,7 +37,6 @@
             'name name
             'type type
             'location location
-            'default default
             'require require
             'help help))]
           [else
@@ -49,7 +45,6 @@
                 'name name
                 'type type
                 'location location
-                'default default
                 'require require
                 'help help
                 'filter filter))])))
@@ -61,7 +56,8 @@
   (define args-hash (make-hasheq))
   (define maybe-json-data  (request-post-data/raw req))
   (define args-data (request-bindings req))
-
+  (displayln args-data)
+  (displayln maybe-json-data)
   (define content-type 
     (cdr (car 
       (filter (λ (header) (eq? (car header) 'content-type)) (request-headers req)))))
@@ -74,66 +70,78 @@
 
   (if (and (not (empty? maybe-json-data))
            (equal? content-type "application/json"))
-    (set! json-hash  (bytes->jsexpr maybe-json-data))
-  (void))
-
+      (set! json-hash  (bytes->jsexpr maybe-json-data))
+    (void))
   (cons args-hash json-hash))
 
 
 (define (arguments . fields)
   (define arguments-hash (make-arguments-hash fields))
-  (define result-hash (make-hash))
   (define (parse-args req)
     (define hashs (parse-req req))
     (define args-hash (car hashs))
     (define json-hash (cdr hashs))
-    (hash-set! result-hash 'errors (list))
-
+    (define result-hash (make-hash))
     (for ([key (hash-keys arguments-hash)])
       (let* 
         ([field (hash-ref arguments-hash key)]
          [name (hash-ref field 'name)]
          [location (hash-ref field 'location 'args)])
         (cond 
-          [(equal? location 'args) (extract-args "args" name field args-hash result-hash)]
-          [else (extract-args "json" name field json-hash result-hash)])))
+          [(equal? location 'args) (begin
+            (extract-args name field args-hash result-hash))]
+          [(equal? location 'form) (begin
+            (extract-args name field args-hash result-hash))]
+          [else (begin
+            (extract-args name field json-hash result-hash))])))
     result-hash)
   parse-args)
 
 
-(define (case-type name value type location)
-  (cond
-    [(eq? type 'int) 
-      (if (eq? location 'args) 
-        (if (number? (string->number value)) #t (string-append "arg" " " name " " "int type error")) 
-          (if (number? value) #t (string-append "arg" " " name " " "int type error"))) ]
-    [(eq? type 'str) (if (string? value) #t (string-append "arg" " " name " " "string type error"))]
-    [(eq? type 'list) (if (list? value) #t (string-append "arg" " " name " " "list type error"))]
-    [(eq? type 'hash) (if (hash? value) #t (string-append "arg" " " name  " "  "hash type error"))]
-    [(eq? type 'symbol) (if (symbol? value) #t (string-append "arg" " " name " " "symbol type error"))]
-    [else #f]))
-  
-
-
-(define (extract-args from name field hash-args result-hash)
-
+(define (extract-args name field hash-args result-hash)
   (define type (hash-ref field 'type))
   (define value (hash-ref hash-args (string->symbol name) '()))
-  (cond 
-    [
-      (not (empty? value))
-      (let ([type-case (case-type name value type (hash-ref field 'location 'args))])
-        (if (boolean? type-case) 
-          (displayln type-case)
-       
-        (hash-set! result-hash 'errors (append (hash-ref result-hash 'errors) (list type-case)))
-        )
-      )
-  ]
-    [else 
-      (displayln "值为空")])
-)
+  (let ([type-case (case-type name value type (hash-ref field 'location 'args))]
+        [field-filter (hash-ref field 'filter '())]
+        [require (hash-ref field 'require)])
+      (cond 
+        [(not (empty? value))
+          (cond 
+            [(boolean? type-case) 
+              (if (empty? field-filter) 
+                (hash-set! result-hash name value)
+              (hash-set! result-hash name (field-filter value)))]
+            [else
+              (hash-set! result-hash 'type-errors 
+                (append 
+                  (hash-ref result-hash 'type-errors  (list))
+                  (list type-case)))])]
+      [else 
+        (if (eq? require #t)
+          (hash-set! result-hash 'required-errors  
+            (append 
+              (hash-ref result-hash 'required-errors  (list)) 
+              (list (format "argument ~a is required" name))))
+        (void))
+      ]))
+  
+  result-hash)
 
+
+(define (case-type name value type location)
+  (cond
+    [(eq? type 'number) 
+      (if (eq? location 'args) 
+        (if (and (not (empty? value)) (number? (string->number value))) 
+          #t 
+        (format "argument ~a is must type number1" name))
+      (if (and (not (empty? value)) (number? value)) 
+        #t
+      (format "argument ~a is must type number2" name)))]
+    [(eq? type 'str) (if (string? value) #t (format "argument ~a is must type string" name))]
+    [(eq? type 'list) (if (list? value) #t (format "argument ~a is must type list" name))]
+    [(eq? type 'hash) (if (hash? value) #t (format "argument ~a is must type hash" name))]
+    [else #f]))
 
 
 
