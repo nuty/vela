@@ -102,19 +102,19 @@
   (let ([type-case (case-type name value type (hash-ref field 'location 'args))]
         [field-filter (hash-ref field 'filter '())]
         [require (hash-ref field 'require)])
-      (cond 
-        [(not (empty? value))
-          (cond 
-            [(boolean? type-case) 
-              (if (empty? field-filter) 
-                (hash-set! result-hash name value)
-              (hash-set! result-hash name (field-filter value)))]
-            [else
-              (hash-set! result-hash 'type-errors 
-                (append 
-                  (hash-ref result-hash 'type-errors  (list))
-                  (list type-case)))])]
-      [else 
+    (cond 
+      [(not (empty? value))
+        (cond 
+          [(boolean? type-case) 
+            (if (empty? field-filter) 
+              (hash-set! result-hash name value)
+            (hash-set! result-hash name (field-filter value)))]
+          [else
+            (hash-set! result-hash 'type-errors 
+              (append 
+                (hash-ref result-hash 'type-errors  (list))
+                (list type-case)))])]
+      [else
         (if (eq? require #t)
           (hash-set! result-hash 'required-errors  
             (append 
@@ -122,7 +122,6 @@
               (list (format "argument '~a' is required" name))))
         (void))
       ]))
-  
   result-hash)
 
 

@@ -31,28 +31,30 @@
 (define hello-handler%
   (class handler%
 
-    (define/public (get id)
-      (define req (get-field request this))
-      (define args (hello-argumets req))
-
-      (jsonify (hash 'code 200 'msg "handle get" )))
-
-
     (define/public (post id)
       (define req (get-field request this))
-      ; (define args (hello-argumets req))
       (define args (hello-argumets1 req))
       (displayln args)
       (jsonify (hash 'code 200 'msg "handle post" )))
 
+    (super-new)))
 
+(define hello-handler1%
+  (class handler%
+
+    (define/public (post id)
+      (define req (get-field request this))
+      (define args (hello-argumets req))
+      (displayln args)
+      (jsonify (hash 'code 200 'msg "handle post" )))
 
     (super-new)))
 
 
 (define routers
   (urls
-    (url "/:id" hello-handler% "hello-list/post")))
+    (url "/:id" hello-handler% "hello-list/post")
+    (url "/json/:id" hello-handler1% "hello-list/post")))
 
 
 (app-run routers #:port 8000)
