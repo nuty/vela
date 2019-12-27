@@ -10,11 +10,11 @@
 (define hello-argumets
   (arguments
     (argument "name" #:type 'str #:location 'json #:default "rosso")
-    (argument "age" #:type 'int #:location 'json)
     (argument "address" #:type 'str #:location 'json #:filter (lambda (x) (string-append "china" x)))
+    (argument "house" #:type 'str #:location 'json)
+    (argument "age" #:type 'int #:location 'json)
     (argument "id" #:type 'int #:location 'args)
-    (argument "page" #:type 'int #:location 'args)
-    (argument "house" #:type 'str #:location 'json)))
+    (argument "page" #:type 'int #:location 'args)))
 
 
 
