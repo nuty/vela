@@ -86,12 +86,12 @@
          [name (hash-ref field 'name)]
          [location (hash-ref field 'location 'args)])
         (cond 
-          [(equal? location 'args) (begin
-            (extract-args name field args-hash result-hash))]
-          [(equal? location 'form) (begin
-            (extract-args name field args-hash result-hash))]
-          [else (begin
-            (extract-args name field json-hash result-hash))])))
+          [(equal? location 'args)
+            (extract-args name field args-hash result-hash)]
+          [(equal? location 'form)
+            (extract-args name field args-hash result-hash)]
+          [else
+            (extract-args name field json-hash result-hash)])))
     result-hash)
   parse-args)
 
@@ -135,7 +135,6 @@
     [(eq? type 'list) (if (list? value) #t (format "argument '~a' is must type list" name))]
     [(eq? type 'hash) (if (hash? value) #t (format "argument '~a' is must type hash" name))]
     [else #f]))
-
 
 
 (provide 
