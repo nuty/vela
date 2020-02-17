@@ -49,12 +49,12 @@
 
 
 (define (render
-    ret
-    #:code    [code 200]
-    #:message [message "OK"]
-    #:seconds [seconds (current-seconds)]
-    #:mime    [mime TEXT/HTML-MIME-TYPE]
-    #:headers [headers empty])
+  ret
+  #:code    [code 200]
+  #:message [message "OK"]
+  #:seconds [seconds (current-seconds)]
+  #:mime    [mime TEXT/HTML-MIME-TYPE]
+  #:headers [headers empty])
   (response
     #:code code
     #:message message
@@ -145,7 +145,7 @@
      [full-file-path (build-path static-path (substring (car file-path) 1))])
       (cond
         [(file-exists? full-file-path)
-          (response/file full-file-path file-type)]
+          (response-file full-file-path file-type)]
         [else
           (not-found req)])))
 
@@ -186,7 +186,7 @@
       (route->handler req routers keys static-path static-url)))
 
 
-(define (response/file file file-type)
+(define (response-file file file-type)
   (let
     ([file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
     (response/output
@@ -194,6 +194,19 @@
         (let ([ip (open-input-file file)])
                 (copy-port ip op)
               (close-input-port ip))) #:mime-type file-mime)))
+
+
+(define (response/file file-path headers)
+  (let*
+    ([file-type (last (string-split file-path "."))]
+      [file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
+      (response/output
+        (λ (op)
+          (let ([ip (open-input-file file-path)])
+              (copy-port ip op)
+            (close-input-port ip)))
+        #:mime-type file-mime
+        #:headers headers)))
 
 
 (define (urls . us)
@@ -242,7 +255,10 @@
   #:listen-ip    [listen-ip "127.0.0.1"]
   #:static-path  [static-path #f]
   #:static-url  [static-url #f]
-  #:log-file [log-file #f])
+  #:log-file [log-file #f]
+  #:server-root-path [server-root-path (current-directory)]
+  #:extra-files-paths [extra-files-paths (list (current-directory))]
+  #:servlets-root [servlets-root (current-directory)])
 
   (serve/servlet
     (λ (req)
@@ -252,7 +268,10 @@
     #:port host/port
     #:listen-ip listen-ip
     #:log-file log-file
-    #:servlet-regexp #rx""))
+    #:servlet-regexp #rx""
+    #:server-root-path server-root-path
+    #:extra-files-paths extra-files-paths
+    #:servlets-root servlets-root))
 
 
 (provide
