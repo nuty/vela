@@ -196,7 +196,7 @@
               (close-input-port ip))) #:mime-type file-mime)))
 
 
-(define (response/file file-path headers)
+(define (response/file file-path [headers default-headers])
   (let*
     ([file-type (last (string-split file-path "."))]
       [file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
