@@ -246,7 +246,7 @@
           (last e))) us)) group)
 
 
-(define (url path handler endpoint)
+(define (url path handler [endpoint ""])
   (list path handler endpoint))
 
 
