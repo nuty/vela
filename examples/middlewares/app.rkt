@@ -1,7 +1,7 @@
 #lang racket
 (require
   gregor
-  vela2-dev
+  vela
   web-server/http/request-structs)
 
 
