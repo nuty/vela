@@ -1,5 +1,6 @@
 #lang racket
-(require 
+(require
+  gregor
   "../../vela-lib/vela/main.rkt"
   web-server/http/request-structs)
 
@@ -10,6 +11,9 @@
 (define (login-required req)
   (jsonify "user not login"))
 
+(define (print-current-time req)
+  (displayln (now)))
+
 (define (say-hi req resp)
   (jsonify "hi"))
 
@@ -19,8 +23,8 @@
 
 (define routers
   (urls
-    (url "/" index  #:on-request (list login-required) "index")
-    (url "/a" index #:on-request (list login-required) #:on-response (list say-hi))
+    (url "/" index  #:on-request (list print-current-time) "index")
+    (url "/a" index #:on-request (list print-current-time) #:on-response (list say-hi))
     (url "/aa" index #:on-response (list say-hi))
     (api-v1
       (url "/cc" index)
