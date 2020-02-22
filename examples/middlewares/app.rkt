@@ -4,39 +4,30 @@
   web-server/http/request-structs)
 
 
-
 (define (index req)
   (jsonify "hello!"))
 
-(define (on-req req)
-  (jsonify "no token"))
+(define (login-required req)
+  (jsonify "user not login"))
 
-(define (on-req1 req)
-  (void))
-
-(define (on-response req resp)
+(define (say-hi req resp)
   (jsonify "hi"))
 
 
-
 (define api-v1 
-  (url-group "/cc" #:on-request (list on-req) #:on-response (list on-response)))
+  (url-group "/cc" #:on-request (list login-required) #:on-response (list say-hi)))
 
 (define routers
-
   (urls
-    (url "/" index  #:on-request (list on-req on-req1))
-    (url "/11" index #:on-request (list on-req))
-    (url "/22" index  "index")
-    (url "/a" index #:on-request (list on-req on-req1) #:on-response (list on-response))
-    (url "/aa" index #:on-response (list on-response))
-
+    (url "/" index  #:on-request (list login-required) "index")
+    (url "/a" index #:on-request (list login-required) #:on-response (list say-hi))
+    (url "/aa" index #:on-response (list say-hi))
     (api-v1
       (url "/cc" index)
-      (url "/dd" index #:on-response (list on-response))
-      (url "/ee" index #:on-request (list on-req on-req1))
-      (url "/ff" index #:on-request (list on-req on-req1) #:on-response (list on-response))
-      (url "/hh" index #:on-request (list on-req on-req1) #:on-response (list on-response) "index1"))))
+      (url "/dd" index #:on-response (list say-hi))
+      (url "/ee" index #:on-request (list login-required))
+      (url "/ff" index #:on-request (list login-required) #:on-response (list say-hi))
+      (url "/hh" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
 
 
 (app-run
