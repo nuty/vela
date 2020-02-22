@@ -16,13 +16,6 @@ Vela is a web application framework. It is designed to make getting started quic
 with the ability to scale up to complex applications. is began as simple wrapper around web-server  
 the goal is become a useful Racket web application framework.
 
-@larger{
-  @bold{
-    Why Racket
-  }
-}
-
-I like Racket and the Web Development is a big part of my day work. so i wrote a racket web framework.
 
 @larger{
   @bold{
@@ -34,11 +27,10 @@ I like Racket and the Web Development is a big part of my day work. so i wrote a
 @itemlist[#:style 'ordered
     @item{@italic{Web handlers with Function or Class.}}
     @item{@italic{Friendly way to define URL routers.}}
-    @item{@italic{JSON response maker.}}
+    @item{@italic{Pluggable middlewares when request and response.}}
     @item{@italic{Request params check and collector.}}
-    @item{@italic{Request and Response middleware supported.}}
     @item{@italic{Entirely on the racket webserver lib.}}
-    ]
+]
 
 
 

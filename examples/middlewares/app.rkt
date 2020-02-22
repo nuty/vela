@@ -1,7 +1,7 @@
 #lang racket
 (require
   gregor
-  vela
+  vela2-dev
   web-server/http/request-structs)
 
 
@@ -24,14 +24,10 @@
 (define routers
   (urls
     (url "/" index  #:on-request (list print-current-time) "index")
-    (url "/a" index #:on-request (list print-current-time) #:on-response (list say-hi))
-    (url "/aa" index #:on-response (list say-hi))
+
     (api-v1
-      (url "/cc" index)
-      (url "/dd" index #:on-response (list say-hi))
-      (url "/ee" index #:on-request (list login-required))
-      (url "/ff" index #:on-request (list login-required) #:on-response (list say-hi))
-      (url "/hh" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
+      (url "/index" index)
+      (url "/index1" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
 
 (app-run
   routers
