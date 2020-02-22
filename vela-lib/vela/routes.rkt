@@ -32,6 +32,7 @@
           (make-url-hash deep-u urls-hash))]))
   urls-hash)
 
+
 (define (make-url-hash u urls-hash)
   (let* 
     ([path (car u)]
@@ -63,10 +64,8 @@
         (url
           (string-append prefix (first e))
           (second e)
-          #:on-request (append on-request (third e))
-          #:on-response (append on-response (fourth e))
-          ;#:on-request (remove-duplicates (append on-request (third e)))
-          ;#:on-response (remove-duplicates (append on-response (fourth e)))
+          #:on-request (remove-duplicates (append on-request (third e)))
+          #:on-response (remove-duplicates (append on-response (fourth e)))
           (last e))) us))
   group)
 

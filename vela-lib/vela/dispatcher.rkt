@@ -61,7 +61,7 @@
 
 (define (call/request-middlewares on-request on-response req handler args)
   (let* 
-    ([middlewares-rets (map (lambda (middleware) (middleware req)) on-request)]
+    ([middlewares-rets (map (lambda (middleware) (middleware req)) (remove-duplicates on-request))]
       [mid-rets (filter (lambda (ret) (eq? ret #t)) 
                     (map (lambda (ret) (can-be-response? ret)) middlewares-rets))])
     (cond
@@ -75,7 +75,7 @@
     [(empty? on-response) resp]
     [else
       (let* 
-        ([middlewares-rets (map (lambda (middleware) (middleware req resp)) on-response)]
+        ([middlewares-rets (map (lambda (middleware) (middleware req resp)) (remove-duplicates on-response))]
           [mid-rets (filter (lambda (ret) (eq? ret #t)) 
                         (map (lambda (ret) (can-be-response? ret)) middlewares-rets))])
         (cond
