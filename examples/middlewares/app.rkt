@@ -37,9 +37,8 @@
       (url "/cc" index)
       (url "/dd" index #:on-response (list on-response))
       (url "/ee" index #:on-request (list on-req on-req1))
-      (url "/ff" index #:on-request (list on-req on-req1) #:on-response (list on-response)))
-      
-      ))
+      (url "/ff" index #:on-request (list on-req on-req1) #:on-response (list on-response))
+      (url "/hh" index #:on-request (list on-req on-req1) #:on-response (list on-response) "index1"))))
 
 
 (app-run

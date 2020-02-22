@@ -29,7 +29,7 @@
      [full-file-path (build-path static-path (substring (car file-path) 1))])
       (cond
         [(file-exists? full-file-path)
-          (response/file full-file-path file-type)]
+          (response-file full-file-path file-type)]
         [else
           (not-found req)])))
 

@@ -70,8 +70,7 @@
 (define (options-response req [headers default-headers])
   (response #:headers headers))
 
-
-(define (response/file file file-type)
+(define (response-file file file-type)
   (let
     ([file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
     (response/output
@@ -80,12 +79,24 @@
                 (copy-port ip op)
               (close-input-port ip))) #:mime-type file-mime)))
 
+(define (response/file file-path [headers default-headers])
+  (let*
+    ([file-type (last (string-split file-path "."))]
+      [file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
+      (response/output
+        (λ (op)
+          (let ([ip (open-input-file file-path)])
+              (copy-port ip op)
+            (close-input-port ip)))
+        #:mime-type file-mime
+        #:headers headers)))
 (provide
   render
   jsonify
   options-response
   not-found
   response/file)
+  response-file)
 
 
 

@@ -59,7 +59,7 @@
   #:on-response [on-response (list)])
   (define (group . us)
     (map 
-      (lambda (e) 
+      (lambda (e)
         (url
           (string-append prefix (first e))
           (second e)
