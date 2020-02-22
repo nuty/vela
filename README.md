@@ -4,9 +4,10 @@ Simple web framework to build restful app in Racket.
 
 Features
 ------------
-- Write handlers use Function Based Handler or Class Based Handler.
+- Web handlers with Function or Class.
 - Friendly way to define url routers.
-- JSON response maker.
+- Pluggable middlewares when request and response.
+- Request params check and collector.
 - Entirely on the racket webserver lib.
 
 
@@ -15,6 +16,24 @@ Installation
 
 `raco pkg install vela`
 
+
+Quickstart
+------------
+
+```racket
+  #lang racket
+  (require vela)
+
+  (define index
+    (lambda (req)
+      (jsonify (hash 'msg "hello world!" ))))
+
+  (define routers
+    (urls
+      (url "/" index "index")))
+
+  (app-run routers #:port 8000)
+```
 
 
 Use Vela
