@@ -1,6 +1,6 @@
 #lang racket
 (require
-  vela
+  "../../vela-lib/vela/main.rkt"
   "handlers.rkt")
 
 

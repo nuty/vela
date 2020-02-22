@@ -1,7 +1,7 @@
 #lang racket
 (require
   web-server/templates
-  vela)
+  "../../vela-lib/vela/main.rkt")
 
 (define (index req)
   (render (include-template "index.html")))
