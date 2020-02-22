@@ -53,7 +53,8 @@
             'endpoint endpoint))])))
 
 
-(define (url-group prefix 
+(define (url-group 
+  prefix 
   #:on-request [on-request (list)]
   #:on-response [on-response (list)])
   (define (group . us)
@@ -62,9 +63,13 @@
         (url
           (string-append prefix (first e))
           (second e)
-          on-request
-          on-response
-          (last e))) us)) group)
+          #:on-request (append on-request (third e))
+          #:on-response (append on-response (fourth e))
+          ;#:on-request (remove-duplicates (append on-request (third e)))
+          ;#:on-response (remove-duplicates (append on-response (fourth e)))
+          (last e))) us))
+  group)
+
 
 (provide
   url
