@@ -1,7 +1,7 @@
 #lang racket
 (require
   gregor
-  "../../vela-lib/vela/main.rkt"
+  vela
   web-server/http/request-structs)
 
 
@@ -32,7 +32,6 @@
       (url "/ee" index #:on-request (list login-required))
       (url "/ff" index #:on-request (list login-required) #:on-response (list say-hi))
       (url "/hh" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
-
 
 (app-run
   routers
