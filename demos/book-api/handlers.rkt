@@ -1,6 +1,6 @@
 #lang racket
 (require 
-  "../../vela-lib/vela/main.rkt"
+  vela
   "data.rkt")
 
 (define api-handler 
