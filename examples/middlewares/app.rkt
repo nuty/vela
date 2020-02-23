@@ -1,18 +1,18 @@
 #lang racket
 (require
-  gregor
   vela
   web-server/http/request-structs)
 
 
-(define (index req)
+(define (index-handler req)
   (jsonify "hello!"))
+
 
 (define (login-required req)
   (jsonify "user not login"))
 
 (define (print-current-time req)
-  (displayln (now)))
+  (displayln (current-seconds)))
 
 (define (say-hi req resp)
   (jsonify "hi"))
@@ -23,12 +23,8 @@
 
 (define routers
   (urls
-    (url "/" index  #:on-request (list print-current-time) "index")
+    (url "/" index-handler  #:on-request (list print-current-time) "index")
 
     (api-v1
-      (url "/index" index)
-      (url "/index1" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
-
-(app-run
-  routers
-  #:port 8000)
+      (url "/index" index-handler)
+      (url "/index1" index-handler #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
