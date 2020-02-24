@@ -1,6 +1,7 @@
 Vela
 ========
-Simple web framework to build restful app in Racket.
+Simple web framework to build restful app in Racket. 
+
 
 Features
 ------------
@@ -35,15 +36,6 @@ Quickstart
   (app-run routers #:port 8000)
 ```
 
-
-Use Vela
------------
-```racket
-#lang racket
-(require vela)
-```
-
-
 Define Handler
 -----------
 There two ways to define a handler.
@@ -77,7 +69,6 @@ Use simple function:
 (define index-handler
   (lambda (req)
     (jsonify (hash 'code 200 'msg "hello api" ))))
-
 ```
 
   or
@@ -85,7 +76,6 @@ Use simple function:
 ```racket
 (define (index-handler req)
   (jsonify (hash 'code 200 'msg "hello api" )))
-
 ```
 
 Response
@@ -167,7 +157,7 @@ Use ```url-group``` grouping routes.
 Use middleware
 -----------
 
-Use ```middleware``` in url or url-group.
+Use middleware in ```url```  or ```url-group```.
 
 ```racket
 (require
@@ -238,11 +228,6 @@ examples
 ----------
 Very simple apps build with Vela in the [examples folder](https://github.com/nuty/vela/tree/master/examples).
 
-
-
-Version
--------
-0.2
 
 License
 -------

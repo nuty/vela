@@ -19,7 +19,7 @@
 
 
 (define api-v1 
-  (url-group "/cc" #:on-request (list login-required) #:on-response (list say-hi)))
+  (url-group "/cc" #:on-request (list login-required)))
 
 (define routers
   (urls
@@ -27,4 +27,4 @@
 
     (api-v1
       (url "/index" index-handler)
-      (url "/index1" index-handler #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
+      (url "/index1" index-handler #:on-response (list say-hi) "index1"))))
