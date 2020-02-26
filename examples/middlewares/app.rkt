@@ -1,12 +1,10 @@
 #lang racket
 (require
-  vela
+  "../../vela-lib/vela/main.rkt"
   web-server/http/request-structs)
-
 
 (define (index-handler req)
   (jsonify "hello!"))
-
 
 (define (login-required req)
   (jsonify "user not login"))
@@ -28,3 +26,8 @@
     (api-v1
       (url "/index" index-handler)
       (url "/index1" index-handler #:on-response (list say-hi) "index1"))))
+
+
+(displayln routers)
+
+(app-run routers #:port 7000)

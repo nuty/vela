@@ -46,17 +46,14 @@
 
 
 (define (handler->method req handler-hash key)
-  (cond
-    [(eq? #"OPTIONS" (request-method req)) (options-response req)]
-    [else
-      (let 
-        ([handler (hash-ref handler-hash 'handler)]
-          [on-request (hash-ref handler-hash 'on-request)]
-          [on-response (hash-ref handler-hash 'on-response)]
-          [args (rest (regexp-match key (url->string (request-uri req))))])
-        (cond 
-          [(empty? on-request) (case-handler req handler args on-response)]
-          [else (call/request-middlewares on-request on-response req handler args)]))]))
+  (let 
+    ([handler (hash-ref handler-hash 'handler)]
+      [on-request (hash-ref handler-hash 'on-request)]
+      [on-response (hash-ref handler-hash 'on-response)]
+      [args (rest (regexp-match key (url->string (request-uri req))))])
+    (cond 
+      [(empty? on-request) (case-handler req handler args on-response)]
+      [else (call/request-middlewares on-request on-response req handler args)])))
 
 
 (define (call/request-middlewares on-request on-response req handler args)

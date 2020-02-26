@@ -67,9 +67,6 @@
     #:message "Not Found"))
 
 
-(define (options-response req [headers default-headers])
-  (response #:headers headers))
-
 (define (response-file file file-type)
   (let
     ([file-mime (hash-ref MIME-TYPE-HASH file-type #"text/html; charset=utf-8")])
@@ -90,15 +87,13 @@
             (close-input-port ip)))
         #:mime-type file-mime
         #:headers headers)))
+
 (provide
   render
   jsonify
-  options-response
   not-found
   response/file
   response-file)
-
-
 
 
 

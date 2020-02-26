@@ -6,9 +6,6 @@
 
 (define default-headers
   (list
-    (make-header #"Access-Control-Allow-Origin" #"*")
-    (make-header #"Access-Control-Allow-Credentials" #"true")
-    (make-header #"Access-Control-Allow-Headers" #"*")
     (make-header #"Access-Control-Allow-Methods" #"PUT, POST, GET, DELETE, PATCH, OPTIONS")))
 
 (define MIME-TYPE-HASH
