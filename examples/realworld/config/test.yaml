@@ -1,0 +1,13 @@
+app:
+    name: realworld
+    debug: true
+    db: db.db
+    token-expire: 6400
+
+aliyun:
+    sms: sdsdsd.sdsds.sdsds
+
+apis:
+    - https://www.a.com
+    - https://www.b.com
+    - https://www.c.com
