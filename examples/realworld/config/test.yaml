@@ -1,13 +1,10 @@
-app:
-    name: realworld
-    debug: true
-    db: db.db
+name: realworld
+debug: true
+db:
+    user: "root"
+    password: "111111"
+    host: "localhost"
+    port: 3306
+
+log:
     token-expire: 6400
-
-aliyun:
-    sms: sdsdsd.sdsds.sdsds
-
-apis:
-    - https://www.a.com
-    - https://www.b.com
-    - https://www.c.com
