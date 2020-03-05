@@ -1,10 +1,12 @@
 name: realworld
 debug: true
+port: 9000
 db:
     user: "root"
     password: "111111"
     host: "localhost"
     port: 3306
 
-log:
-    token-expire: 6400
+log: access.log
+
+token-expire: 6400

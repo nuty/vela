@@ -4,13 +4,8 @@
   "./config/main.rkt"
   "./routers.rkt")
 
+(displayln config)
 
-(define log (hash-ref config 'log))
-
-(define f (string->symbol log))
-
-(displayln (string? f))
-(displayln (symbol? f))
-
-
-(app-run routers #:port 9000)
+(app-run 
+  routers
+  #:port (hash-ref config 'port))
