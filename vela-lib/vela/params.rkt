@@ -107,8 +107,8 @@
         (cond
           [(boolean? type-case)
             (if (empty? field-filter)
-              (hash-set! result-hash name value)
-            (hash-set! result-hash name (field-filter value)))]
+              (hash-set! result-hash (string->symbol name) value)
+            (hash-set! result-hash (string->symbol name) (field-filter value)))]
           [else
             (hash-set! result-hash 'type-errors 
               (append
