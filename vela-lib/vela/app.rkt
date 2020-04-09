@@ -32,7 +32,7 @@
     #:listen-ip listen-ip
     #:log-file log-file
     #:servlet-regexp #rx""
-    #:quit quit))
+    #:quit? quit))
 
 (provide
   handler%
