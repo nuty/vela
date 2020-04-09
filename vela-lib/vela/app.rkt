@@ -20,7 +20,8 @@
   #:listen-ip    [listen-ip "127.0.0.1"]
   #:static-path  [static-path #f]
   #:static-url  [static-url #f]
-  #:log-file [log-file #f])
+  #:log-file [log-file #f]
+  #:quit? [quit #t])
 
   (serve/servlet
     (λ (req)
@@ -30,7 +31,8 @@
     #:port host/port
     #:listen-ip listen-ip
     #:log-file log-file
-    #:servlet-regexp #rx""))
+    #:servlet-regexp #rx""
+    #:quit quit))
 
 (provide
   handler%
