@@ -103,31 +103,6 @@ HTML template
 (render (include-template "index.html"))
 ```
 
-
-URL routes
------------
-
-Use ```urls``` and ```url``` function to define route.
-
-```racket
-(define routers
-  (urls
-    (url "/" index-handler "handler with function")))
-```
-
-Use ```url-group``` grouping routes.
-
-
-```racket
-(define api-v1 (url-group "/api/v1"))
-
-(define routers
-  (urls
-	 ...
-    (api-v1
-      (url "/hellos" hello-handler "hello-list/post")
-      (url "/hello/:id" hello-handler "hello-put/delete/get"))))
-```
 URL routes
 -----------
 
