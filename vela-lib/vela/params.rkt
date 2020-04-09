@@ -56,6 +56,7 @@
   (define args-hash (make-hasheq))
   (define maybe-json-data  (request-post-data/raw req))
   (define args-data (request-bindings req))
+
   (define content-type 
     (cdr (car 
       (filter (λ (header) (eq? (car header) 'content-type)) (request-headers req)))))
@@ -66,8 +67,7 @@
        [value (cdr arg)])
        (hash-set! args-hash key value)))
 
-  (if (and (not (empty? maybe-json-data))
-           (equal? content-type "application/json"))
+    (if (and (not (boolean? maybe-json-data)) (equal? content-type "application/json"))
       (set! json-hash  (bytes->jsexpr maybe-json-data))
     (void))
   (cons args-hash json-hash))
@@ -107,8 +107,8 @@
         (cond
           [(boolean? type-case)
             (if (empty? field-filter)
-              (hash-set! result-hash name value)
-            (hash-set! result-hash name (field-filter value)))]
+              (hash-set! result-hash (string->symbol name) value)
+            (hash-set! result-hash (string->symbol name) (field-filter value)))]
           [else
             (hash-set! result-hash 'type-errors 
               (append
@@ -128,13 +128,12 @@
 (define (case-type name value type location)
   (cond
     [(eq? type 'number)
-
       (cond [(not (eq? value '()))
             (if (or (number? value) (number? (string->number value)))
               #t
             (format "argument '~a' is must type number" name))]
             [else (void)])
-      ]
+    ]
     [(eq? type 'str) (if (string? value) #t (format "argument '~a' is must type string" name))]
     [(eq? type 'list) (if (list? value) #t (format "argument '~a' is must type list" name))]
     [(eq? type 'hash) (if (hash? value) #t (format "argument '~a' is must type hash" name))]
