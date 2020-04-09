@@ -45,6 +45,21 @@
             (handler->method req (hash-ref routers key) key)]))]))
 
 
+(define (call/middlewares on-request on-response req handler args)
+  (call/cc
+    (lambda (exit)
+      (let iter ((rest lst))
+        (cond
+          ((null? rest) 1)
+          ((zero? (car rest)) (exit 0))
+          (else (* (car rest) (iter (cdr rest))))
+        )
+      )
+    )
+  )
+)
+
+
 (define (handler->method req handler-hash key)
   (let 
     ([handler (hash-ref handler-hash 'handler)]
