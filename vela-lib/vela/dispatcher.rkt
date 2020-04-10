@@ -45,8 +45,6 @@
             (handler->method req (hash-ref routers key) key)]))]))
 
 
-
-
 (define (handler->method req handler-hash key)
   (let 
     ([handler (hash-ref handler-hash 'handler)]
@@ -58,21 +56,10 @@
       [else (call/request-middlewares on-request on-response req handler args)])))
 
 
-(define (call/request-middlewares on-request on-response req handler args)
-  (let* 
-    ([middlewares-rets (map (lambda (middleware) (middleware req)) (remove-duplicates on-request))]
-      [mid-rets (filter (lambda (ret) (eq? ret #t)) 
-                    (map (lambda (ret) (can-be-response? ret)) middlewares-rets))])
-    (cond
-      [(list? (member #t mid-rets)) (first middlewares-rets)]
-      [(boolean? (member #t mid-rets)) (case-handler req handler args on-response)]
-      [else (case-handler req handler args on-response)])))
-
-
-(define (call/middlewares on-request req)
+(define (call/middlewares middlewares req)
   (call/cc
     (lambda (exit)
-      (let iter ((rest on-request) on-response req handler args)
+      (let iter ((rest middlewares) req)
         (cond
           [(null? rest) #t]
           [(can-be-response? ((car rest) req)) (exit ((car rest) req))]
@@ -80,18 +67,24 @@
             (iter (cdr rest) req)])))))
 
 
+(define (call/request-middlewares on-request on-response req handler args)
+  (let
+    ([mid-ret (call/middlewares (remove-duplicates on-request) req)])
+    (cond
+      [(can-be-response? mid-ret) mid-ret]
+      [(eq? #t mid-ret) (case-handler req handler args on-response)]
+      [else (case-handler req handler args on-response)])))
+
 
 (define (call/response-middlewares on-response req resp)
   (cond
     [(empty? on-response) resp]
     [else
-      (let* 
-        ([middlewares-rets (map (lambda (middleware) (middleware req resp)) (remove-duplicates on-response))]
-          [mid-rets (filter (lambda (ret) (eq? ret #t)) 
-                        (map (lambda (ret) (can-be-response? ret)) middlewares-rets))])
+      (let
+        ([mid-ret (call/middlewares (remove-duplicates on-response) req)])
         (cond
-          [(list? (member #t mid-rets)) (first middlewares-rets)]
-          [(boolean? (member #t mid-rets)) resp]
+          [(can-be-response? mid-ret) mid-ret]
+          [(eq? #t mid-ret) resp]
           [else resp]))]))
 
 
