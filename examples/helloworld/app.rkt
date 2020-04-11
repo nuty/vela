@@ -16,6 +16,18 @@
     (argument "hello" #:type 'str #:location 'form)
     (argument "id" #:type 'number #:location 'args #:require #t)))
 
+(define index
+  (lambda (req id ad bd)
+    (displayln id)
+    (displayln ad)
+    (displayln bd)
+    (jsonify (hash 'msg "hello world!"))))
+
+(define index1
+  (lambda (req)
+    (jsonify (hash 'msg "hello world!" ))))
+
+
 
 (define hello-handler%
   (class handler%
@@ -32,7 +44,8 @@
 
 (define routers
   (urls
-    (url "/:id" hello-handler%  "end-point")
+    (url "/" index1 "index1")
+    (url "/:id/:ad/:bd" index "index")
     (api-v1
       (url "/:id" hello-handler% "end-point"))))
 

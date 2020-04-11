@@ -51,9 +51,9 @@
       [on-request (hash-ref handler-hash 'on-request)]
       [on-response (hash-ref handler-hash 'on-response)]
       [args (rest (regexp-match key (url->string (request-uri req))))])
-    (cond 
-      [(empty? on-request) (case-handler req handler args on-response)]
-      [else (call/request-middlewares on-request on-response req handler args)])))
+      (cond
+        [(empty? on-request) (case-handler req handler args on-response)]
+        [else (call/request-middlewares on-request on-response req handler args)])))
 
 
 (define (call/middlewares middlewares req [resp null])
@@ -77,7 +77,6 @@
     ([mid-ret (call/middlewares (remove-duplicates on-request) req)])
     (cond
       [(can-be-response? mid-ret) mid-ret]
-      [(eq? #t mid-ret) (case-handler req handler args on-response)]
       [else (case-handler req handler args on-response)])))
 
 
@@ -89,14 +88,16 @@
         ([mid-ret (call/middlewares (remove-duplicates on-response) req resp)])
         (cond
           [(can-be-response? mid-ret) mid-ret]
-          [(eq? #t mid-ret) resp]
           [else resp]))]))
 
 
 (define (case-handler req handler args on-response)
   (cond
-    [(procedure? handler) 
-      (call/response-middlewares on-response req (if (empty? args) (handler req) (handler req args)))]
+    [(procedure? handler)
+        (call/response-middlewares 
+          on-response 
+          req 
+          (if (empty? args) (handler req) (apply handler (append '(req) args))))]
     [else
       (let ([handler-object (make-object handler req)])
         (begin
