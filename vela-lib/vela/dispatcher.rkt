@@ -56,16 +56,29 @@
       [else (call/request-middlewares on-request on-response req handler args)])))
 
 
-(define (call/middlewares middlewares req)
+(define (call/middlewares middlewares req [resp null])
   (call/cc
     (lambda (exit)
-      (let iter ((rest middlewares) req)
+      (let iter ((rest middlewares))
         (cond
           [(null? rest) #t]
-          [(can-be-response? ((car rest) req)) (exit ((car rest) req))]
+          [(can-be-response?
+            (if (empty? resp) 
+              ((car rest) req)
+            ((car rest) req resp)))
+            (exit
+              (if (empty? resp) ((car rest) req) ((car rest) req resp)))]
           [else 
-            (iter (cdr rest) req)])))))
+            (iter (cdr rest))])))))
 
+
+(define (call/request-middlewares on-request on-response req handler args)
+  (let
+    ([mid-ret (call/middlewares (remove-duplicates on-request) req)])
+    (cond
+      [(can-be-response? mid-ret) mid-ret]
+      [(eq? #t mid-ret) (case-handler req handler args on-response)]
+      [else (case-handler req handler args on-response)])))
 
 (define (call/request-middlewares on-request on-response req handler args)
   (let
@@ -81,7 +94,7 @@
     [(empty? on-response) resp]
     [else
       (let
-        ([mid-ret (call/middlewares (remove-duplicates on-response) req)])
+        ([mid-ret (call/middlewares (remove-duplicates on-response) req resp)])
         (cond
           [(can-be-response? mid-ret) mid-ret]
           [(eq? #t mid-ret) resp]

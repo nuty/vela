@@ -3,7 +3,8 @@
 
 
 
-@defproc[(run-app 
+@defproc[#:link-target? #f
+        (run-app 
         [routers urls?]
         [listen-ip "127.0.0.1"]
         [static-path path?]

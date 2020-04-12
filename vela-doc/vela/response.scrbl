@@ -1,7 +1,8 @@
 #lang scribble/manual
 @title[#:style '(toc)]{Response}
 
-@defproc[(jsonify 
+@defproc[#:link-target? #f
+        (jsonify 
               [headers list?]
               [body any?]
             )
@@ -15,12 +16,13 @@
   (jsonify (hash 'msg "ok"))
 }|
 
-@defproc[(response 
-                    [code 200]
-                    [message "OK"]
-                    [seconds (current-seconds)]
-                    [mime string?]
-                    [headers list?]
-                    [body response-body]
-                    )
+@defproc[#:link-target? #f
+        (response 
+          [code 200]
+          [message "OK"]
+          [seconds (current-seconds)]
+          [mime string?]
+          [headers list?]
+          [body response-body]
+          )
          can-be-response?]

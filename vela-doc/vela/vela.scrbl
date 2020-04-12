@@ -2,6 +2,8 @@
 @(require scribble/eval
           (for-label racket
                      vela))
+
+
 @title[#:style '(toc)]{Vela: Simple web framework}
 @author[(author+email "(Rosso)" "answerw16@gmail.com")]
 
@@ -76,6 +78,5 @@ A minimal app looks like this:
 @include-section["handler.scrbl"]
 @include-section["url.scrbl"]
 @include-section["response.scrbl"]
-@include-section["app.scrbl"]
-@include-section["params.scrbl"]
 @include-section["middleware.scrbl"]
+@include-section["app.scrbl"]

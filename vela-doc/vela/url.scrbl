@@ -6,11 +6,13 @@ Modern web applications use meaningful URLs to help users. Users are more likely
 bascly you need two function to define routers.
 
 
-@defproc[(urls [url list?])
+@defproc[#:link-target? #f
+        (urls [url list?])
          (listof url)]
 
 
-@defproc[(url 
+@defproc[#:link-target? #f
+          (url 
             [path string?] 
             [handler procedure?] 
             [on-request list-of-procedure?] 
@@ -23,7 +25,8 @@ bascly you need two function to define routers.
    url-group to grouping the routers
 }
 
-@defproc[(url-group 
+@defproc[#:link-target? #f
+        (url-group 
             [prefix string?] 
             [on-request list-of-procedure?] 
             [on-response list-of-procedure?])

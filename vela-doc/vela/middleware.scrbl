@@ -8,7 +8,7 @@
 
 }
 
-Vela provided middleware whth two points: on-request and on-response:
+Vela provided middleware by two points: on-request and on-response:
 
 you should add the middleware to url function or url-group function.
 
