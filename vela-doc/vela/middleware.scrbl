@@ -5,46 +5,102 @@
 
 @larger{
   Use Middleware 
-
 }
 
-Vela provided middleware whth two points: on-request and on-response:
+Vela provided middleware by two slots: on-request and on-response:
 
 you should add the middleware to url function or url-group function.
+
+
+
+@larger{
+  Request middleware
+}
+
+
+Request middleware function need a request argument. such like this.
+
+@codeblock|{
+  (define (request-middleware req)
+    ...)
+}|
+
+
+@larger{
+  Response middleware
+}
+
+
+Response middleware function need two request arguments, request and response. such like this.
+
+@codeblock|{
+  (define (response-middleware req resp)
+    ...)
+}|
+
+
+Whether it is request middleware or response middleware. When it returns a can-be-response?, 
+the entire request will be interrupted and the responsed by the middleware will be returned.
+
+This is an example to check user auth. if user is logged-in then cuntinue to next or 
+if user not logged-in return some message.
+
+
+@codeblock|{
+  (define (login-required req)
+    (if (is-logged-in req)
+      (void)
+    (jsonify "401")))
+}|
+
 
 @codeblock|{
 
 #lang racket
 (require
-  gregor
   vela
   web-server/http/request-structs)
 
+;; handler
 (define (index req)
   (jsonify "hello!"))
 
-(define (login-required req)
-  (jsonify "user not login"))
+;; middlewares
+(define (request-middleware req)
+  (jsonify "hi!"))
 
-(define (print-current-time req)
-  (displayln (now)))
+(define (response-middleware req resp)
+  (jsonify "bye!"))
 
-(define (say-hi req resp)
-  (jsonify "hi"))
+;; url groups
+(define req-urls
+  (url-group "/req" #:on-request (list request-middleware)))
 
-(define api-v1 
-  (url-group "/cc" #:on-request (list login-required) #:on-response (list say-hi)))
+(define resp-urls
+  (url-group "/resp" #:on-response (list response-middleware)))
 
-(define routers
+(define req-and-resp-urls
+  (url-group "/both" #:on-request (list request-middleware) #:on-response (list response-middleware)))
+
+
+;; routers
+(define middles-test-routers
   (urls
-    (url "/" index  #:on-request (list print-current-time) "index")
+    (url "/req" index  #:on-request (list request-middleware) "request-middleware")
+    (url "/resp" index  #:on-response (list response-middleware) "response-middleware")
 
-    (api-v1
-      (url "/index" index)
-      (url "/index1" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
+    (req-urls
+      (url "/test" index "test-req"))
+
+    (resp-urls
+      (url "/test" index "test-resp"))
+
+    (req-and-resp-urls
+      (url "/test" index "test-req-and-resp"))))
+
 
 (app-run
-  routers
+  middles-test-routers
   #:port 8000)
 }|
 

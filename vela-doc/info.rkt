@@ -1,6 +1,7 @@
 #lang info
 
 (define collection 'multi)
+(define scribblings '(("vela/vela.scrbl" (multi-page))))
 
 (define deps '("base"))
 (define build-deps '("base"

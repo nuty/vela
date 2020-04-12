@@ -2,6 +2,8 @@
 @(require scribble/eval
           (for-label racket
                      vela))
+
+
 @title[#:style '(toc)]{Vela: Simple web framework}
 @author[(author+email "(Rosso)" "answerw16@gmail.com")]
 
@@ -33,8 +35,6 @@ the goal is become a useful Racket web application framework.
 ]
 
 
-
-
 @section{Quickstart}
 
 @larger{ 
@@ -51,7 +51,7 @@ To install Vela from the command line:
 }|
 
 
-A minimal app looks like this:
+A minimal app like this:
 
 @filebox["app.rkt"]{
   @codeblock|{
@@ -76,6 +76,5 @@ A minimal app looks like this:
 @include-section["handler.scrbl"]
 @include-section["url.scrbl"]
 @include-section["response.scrbl"]
-@include-section["app.scrbl"]
-@include-section["params.scrbl"]
 @include-section["middleware.scrbl"]
+@include-section["app.scrbl"]
