@@ -1,7 +1,7 @@
 #lang scribble/manual
 @title[#:style '(toc)]{Web handler}
 
-Vela also support setting the response code and response headers using multiple return values, as shown below:
+Vela support Function based handler or Class based handler.
 
 
 @larger{
@@ -15,7 +15,6 @@ Function based handler use to write condational html app.
 (define index
   (lambda (req)
     (jsonify (hash 'code 200 'msg "hello world!" )))))
-
 
   @bold{
     @italic{or}
@@ -52,9 +51,19 @@ Class based handler use to build RESTful API.
     (define/public (patch)
       (jsonify (hash 'code 200 'msg "handle patch" )))
 
+    (super-new))))
+
+Get request context in class use (get-field request this) inside class.
+
+@codeblock|{
+  (define hello-world%
+    (class handler%
+
+      (define/public (get [id null])
+        (define req (get-field request this))
+        (jsonify (hash 'code 200 'msg "handle get" )))
+
     (super-new)))
-
-)
-
+}|
 
 

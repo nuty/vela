@@ -21,9 +21,11 @@ bascly you need two function to define routers.
          (listof argument)]
 
 
+
 @bold{
    url-group to grouping the routers
 }
+
 
 @defproc[#:link-target? #f
         (url-group 
@@ -37,16 +39,17 @@ the on-request and on-request arguments are keyword arguments.
 @bold{
     Example
 }
-@codeblock|{
 
+
+@codeblock|{
 (define api-v1 
-  (url-group "/cc" #:on-request (list login-required) #:on-response (list say-hi)))
+  (url-group "/api/v1"))
 
 (define routers
   (urls
-    (url "/" index  #:on-request (list print-current-time) "index")
+    (url "/" index "index")
 
     (api-v1
       (url "/index" index)
-      (url "/index1" index #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
+      (url "/index1" index #:on-request "index1"))))
 }|

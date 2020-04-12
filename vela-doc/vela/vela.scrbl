@@ -35,8 +35,6 @@ the goal is become a useful Racket web application framework.
 ]
 
 
-
-
 @section{Quickstart}
 
 @larger{ 
@@ -53,7 +51,7 @@ To install Vela from the command line:
 }|
 
 
-A minimal app looks like this:
+A minimal app like this:
 
 @filebox["app.rkt"]{
   @codeblock|{

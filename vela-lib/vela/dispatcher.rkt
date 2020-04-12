@@ -79,14 +79,6 @@
       [(can-be-response? mid-ret) mid-ret]
       [else (case-handler req handler args on-response)])))
 
-(define (call/request-middlewares on-request on-response req handler args)
-  (let
-    ([mid-ret (call/middlewares (remove-duplicates on-request) req)])
-    (cond
-      [(can-be-response? mid-ret) mid-ret]
-      [(eq? #t mid-ret) (case-handler req handler args on-response)]
-      [else (case-handler req handler args on-response)])))
-
 
 (define (call/response-middlewares on-response req resp)
   (cond
