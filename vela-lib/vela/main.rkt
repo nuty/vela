@@ -10,7 +10,8 @@
 
 (provide 
   (all-from-out
+    "dispatcher.rkt"
     "context.rkt"
     "app.rkt"
     "params.rkt"
-    "config.rkt"))
+    "routes.rkt"))
