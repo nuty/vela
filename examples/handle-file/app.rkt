@@ -1,9 +1,7 @@
 #lang racket/base
 (require
   web-server/http/request-structs
-  vela/context
-  vela/routes
-  vela/app)
+  "../../vela-lib/vela/main.rkt")
 
 (define headers 
   (list

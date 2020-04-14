@@ -4,5 +4,5 @@
 (define implies
   '("vela-lib" "vela-docs"))
 (define pkg-desc "Simple web framework to build restful app in Racket.")
-(define version "0.2")
+(define version "0.3")
 (define pkg-authors '(rosso))
