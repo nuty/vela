@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/base
 (require
   web-server/templates
   "../../vela-lib/vela/main.rkt")

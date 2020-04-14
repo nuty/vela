@@ -1,5 +1,8 @@
-#lang racket
+#lang racket/base
 (require
+  racket/list
+  racket/string
+  racket/class
   web-server/http/request-structs
   web-server/servlet/servlet-structs
   (only-in web-server/servlet url->string)

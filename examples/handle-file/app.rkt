@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/base
 (require
   web-server/http/request-structs
   vela/context

@@ -1,6 +1,8 @@
-#lang racket
+#lang racket/base
 
-(require "meta.rkt")
+(require
+  racket/list
+  "meta.rkt")
 
 (define (path->keys path)
   (map (λ (match) (string->symbol (substring match 2)))

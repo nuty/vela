@@ -1,5 +1,8 @@
-#lang racket
+#lang racket/base
 (require
+  racket/list
+  racket/port
+  racket/string
   json
   web-server/http/response-structs
   "meta.rkt")

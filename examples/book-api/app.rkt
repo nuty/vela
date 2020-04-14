@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/base
 (require
   "../../vela-lib/vela/main.rkt"
   "handlers.rkt")
