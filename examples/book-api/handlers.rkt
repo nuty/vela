@@ -1,5 +1,6 @@
-#lang racket
+#lang racket/base
 (require 
+  racket/class
   "../../vela-lib/vela/main.rkt"
   "data.rkt")
 

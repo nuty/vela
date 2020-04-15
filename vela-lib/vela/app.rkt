@@ -1,5 +1,6 @@
-#lang racket
+#lang racket/base
 (require
+  racket/class
   web-server/servlet-env
   web-server/http/request-structs
   "dispatcher.rkt")

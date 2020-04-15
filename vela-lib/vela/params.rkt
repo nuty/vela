@@ -1,7 +1,8 @@
-#lang racket
+#lang racket/base
 (require
   json
   racket/struct
+  racket/list
   net/url
   web-server/http/bindings
   web-server/http/request-structs
