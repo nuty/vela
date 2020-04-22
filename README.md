@@ -47,7 +47,7 @@ Use ```handler%```
   (class handler%
 
     (define/public (get [id null])
-      (displayln id)
+	  (define req (get-field request this))
       (jsonify (hash 'code 200 'msg "handle get" )))
 
     (define/public (post)
@@ -133,41 +133,55 @@ Use middleware
 -----------
 
 Use middleware in ```url```  or ```url-group```.
+Whether it is request middleware or response middleware. When it returns a can-be-response?, 
+the entire request will be interrupted and the responsed by the middleware will be returned.
+
 
 ```racket
 (require
   vela
   web-server/http/request-structs)
 
-
-(define (index-handler req)
+;; handler
+(define (index req)
   (jsonify "hello!"))
 
+;; middlewares
+(define (request-middleware req)
+  (jsonify "hi!"))
 
-(define (login-required req)
-  (jsonify "user not login"))
+(define (response-middleware req resp)
+  (jsonify "bye!"))
 
-(define (print-current-time req)
-  (displayln (current-seconds)))
+;; url groups
+(define req-urls
+  (url-group "/req" #:on-request (list request-middleware)))
 
-(define (say-hi req resp)
-  (jsonify "hi"))
+(define resp-urls
+  (url-group "/resp" #:on-response (list response-middleware)))
+
+(define req-and-resp-urls
+  (url-group "/both" #:on-request (list request-middleware) #:on-response (list response-middleware)))
 
 
-(define api-v1 
-  (url-group "/cc" #:on-request (list login-required) #:on-response (list say-hi)))
-
-(define routers
+;; routers
+(define middles-test-routers
   (urls
-    (url "/" index-handler  #:on-request (list print-current-time) "index")
+    (url "/req" index  #:on-request (list request-middleware) "request-middleware")
+    (url "/resp" index  #:on-response (list response-middleware) "response-middleware")
 
-    (api-v1
-      (url "/index" index-handler)
-      (url "/index1" index-handler #:on-request (list login-required) #:on-response (list say-hi) "index1"))))
+    (req-urls
+      (url "/test" index "test-req"))
+
+    (resp-urls
+      (url "/test" index "test-resp"))
+
+    (req-and-resp-urls
+      (url "/test" index "test-req-and-resp"))))
 
 ```
 
-request middleware must set a request argument. response middleware must set request and response argument.
+request middleware should set a request argument is request context. response middleware must set request and response arguments.
 
 
 Customize Headers
