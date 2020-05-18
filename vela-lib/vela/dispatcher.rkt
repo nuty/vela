@@ -100,7 +100,7 @@
         (call/response-middlewares 
           on-response 
           req 
-          (if (empty? args) (handler req) (apply handler (append '(req) args))))]
+          (if (empty? args) (handler req) (apply handler (append (list req) args))))]
     [else
       (let ([handler-object (make-object handler req)])
         (begin
