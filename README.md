@@ -148,9 +148,11 @@ the entire request will be interrupted and the responsed by the middleware will 
 
 ;; middlewares
 (define (request-middleware req)
+  (displayln "current-datetime")
   (jsonify "hi!"))
 
 (define (response-middleware req resp)
+  (displayln "current-datetime")
   (jsonify "bye!"))
 
 ;; url groups
